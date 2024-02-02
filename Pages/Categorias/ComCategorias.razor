@@ -1,0 +1,92 @@
+﻿@page "/categorias"
+@using Models.DTO;
+@using Repositorio.IRepositorio
+@inject ICategoriaRepositorio iCatRepos
+
+<h1 class="text-center">Categorías</h1>
+
+<div class="car">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-7">
+                <h4 class="card-title text-dark">
+                    Lista de categorías
+                </h4>
+            </div>
+            @*Va dos columnas desde la izquierda*@
+            <div class="offset-2">
+                <NavLink href="crear-categoria" class="btn btn-primary">
+                    <i class="oi oi-browser"></i>
+                    Nueva categoria
+                </NavLink>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Descripcion</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(categoriaDTO.Count() > 0)
+                {
+                    foreach (var categoria in categoriaDTO)
+                    {
+                        <tr>
+                            <td>@categoria.IDCategoria</td>
+                            <td>@categoria.NombreCategoria</td>
+                            <td>@categoria.Descripcion</td>
+                            <td>
+                                <NavLink href="@($"editar-categoria/{categoria.IDCategoria}")" class="btn btn-success">
+                                    <i class="oi oi-cog"></i>Editar
+                                </NavLink>
+                                <button class="btn btn-danger" @onclick="()=>ManejadorBorrar(categoria.IDCategoria)">
+                                    <i class="oi oi-cog"></i>Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">No hay registros</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+
+@code {
+    private IEnumerable<CategoriaDTO> categoriaDTO { get; set; } = new List<CategoriaDTO>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        categoriaDTO = await iCatRepos.GetTodasCategorias();
+    }
+
+
+    private async Task ManejadorBorrar(int categoriaID)
+    {
+        
+    }
+
+
+
+
+
+
+
+}

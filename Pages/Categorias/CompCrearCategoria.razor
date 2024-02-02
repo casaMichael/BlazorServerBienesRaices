@@ -1,0 +1,94 @@
+﻿@page "/crear-categoria"
+@using Models.DTO;
+@using Repositorio.IRepositorio
+@inject ICategoriaRepositorio iCategReposi
+@inject NavigationManager navMan
+
+<h1 class="text-center">Crear categoría</h1>
+
+<div class="car">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-7">
+                <h4 class="card-title text-dark">
+                    Nueva categoria
+                </h4>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <EditForm Model="categoriaDTO" OnValidSubmit="@( () =>ManejadorCrearCategoria())">
+            <DataAnnotationsValidator />
+            <ValidationSummary/>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-2">
+                        <label>Nombre:</label>
+                    </div>
+                    <div class="col-6">
+                        <InputText @bind-Value="categoriaDTO.NombreCategoria" class="form-control" placeholder="Ingresa nombre">
+                        </InputText>
+                        <ValidationMessage For="() => categoriaDTO.NombreCategoria"></ValidationMessage>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-2">
+                        <label>Descripcion:</label>
+                    </div>
+                    <div class="col-6">
+                        <InputText @bind-Value="categoriaDTO.Descripcion" class="form-control" placeholder="Ingresa descripcion">
+                        </InputText>
+                        <ValidationMessage For="() => categoriaDTO.Descripcion"></ValidationMessage>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="oi oi-circle-check"></i>&nbsp; Guardar
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <NavLink href="categorias" class="btn btn-secondary">
+                            <i class="oi oi-chevron-left"></i>&nbsp; Volver
+                        </NavLink>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </EditForm>
+    </div>
+</div>
+
+
+
+
+@code {
+    private CategoriaDTO categoriaDTO { get; set; } = new CategoriaDTO();
+
+    private async Task ManejadorCrearCategoria()
+    {
+        var nombreCategoria = await iCategReposi.NombreCategoriaExiste(categoriaDTO.NombreCategoria);
+        if(nombreCategoria != null)
+        {
+            return;
+        }
+
+        //Si llega aqui crear
+        var crearCategoria = await iCategReposi.CrearCategoria(categoriaDTO);
+        //Navega a la url categorias
+        navMan.NavigateTo("categorias");
+
+
+    }
+
+
+}
