@@ -1,0 +1,83 @@
+﻿@inject IJSRuntime JSRunTimeBla
+@page "/blazorConJS"
+
+<h3>CompBlazorConJS</h3>
+
+
+
+
+<div class="row mt-4">
+    <div class="col-4">
+        <button class="btn btn-secondary" @onclick="(() => DemoConfirmacion(MensajeConfirmacion))">
+            Demo boton confirmar
+        </button>
+    </div>
+</div>
+
+@*TOASTR*@
+<div class="row mt-4">
+    <div class="col-4">
+        <button class="btn btn-success" @onclick="DemoSuccess">Demo Toastr Succes</button>
+        <button class="btn btn-danger" @onclick="DemoError">Demo Toastr Error</button>
+    </div>
+</div>
+
+@*SWEET ALERT*@
+<div class="row mt-4">
+    <div class="col-4">
+        <button class="btn btn-success" @onclick="DemoSuccessSwAl">Demo Toastr Succes</button>
+        <button class="btn btn-danger" @onclick="DemoErrorSwAl">Demo Toastr Error</button>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    @if (ConfirmacionResultado)
+    {
+        <p>Confirmacion Hecha!</p>
+    }
+    else
+    {
+        <p>Confirmacion Pendiente!</p>
+    }
+
+
+</div>
+
+
+@code {
+
+    private string MensajeConfirmacion = "Esta seguro de dar clic?";
+    private bool ConfirmacionResultado { get; set; }
+
+
+    private async Task DemoConfirmacion(string mensaje)
+    {
+        ConfirmacionResultado = await JSRunTimeBla.InvokeAsync<bool>("confirm",mensaje);
+    }
+    //Metodos para TOASTR
+    private async Task DemoSuccess()
+    {/*Sin implementacion general
+        await JSRunTimeBla.InvokeVoidAsync("ShowToastr", "success","Tarea completa!");*/
+    //Llamado desde Helpers
+        await JSRunTimeBla.ToastrSuccess("Tarea completa!");
+
+    }
+    private async Task DemoError()
+    {
+        await JSRunTimeBla.ToastrError("Error tarea completada!");
+    }
+
+    @*SWEET ALERT*@
+    private async Task DemoSuccessSwAl()
+    {
+        await JSRunTimeBla.InvokeVoidAsync("SweetAlert", "success", "Tarea completa!");
+    }
+    private async Task DemoErrorSwAl()
+    {
+        await JSRunTimeBla.InvokeVoidAsync("SweetAlert", "error", "Error Tarea incompleta!");
+    }
+
+}

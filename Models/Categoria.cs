@@ -11,6 +11,9 @@ namespace BlazorServerBienesRaices.Models
         public string Descripcion { get; set; }
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
         public DateTime FechaActualizacion { get; set; }
+        
+        //Relacion con modelo/tabla propiedad
+        public virtual ICollection<Propiedad> Propiedad { get; set; }
 
 
     }

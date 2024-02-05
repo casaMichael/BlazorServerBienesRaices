@@ -2,6 +2,7 @@
 @using Models.DTO;
 @using Repositorio.IRepositorio
 @inject ICategoriaRepositorio iCategReposi
+@inject IJSRuntime JSRunTimeBla
 @inject NavigationManager navMan
 
 <h1 class="text-center">Crear categoría</h1>
@@ -78,12 +79,14 @@
     {
         var nombreCategoria = await iCategReposi.NombreCategoriaExiste(categoriaDTO.NombreCategoria);
         if(nombreCategoria != null)
-        {
+        {   //Categoria duplicar error
+            await JSRunTimeBla.ToastrError("El nombre de la categoria ya existe");
             return;
         }
 
         //Si llega aqui crear
         var crearCategoria = await iCategReposi.CrearCategoria(categoriaDTO);
+        await JSRunTimeBla.ToastrSuccess("Categoría creada");
         //Navega a la url categorias
         navMan.NavigateTo("categorias");
 
