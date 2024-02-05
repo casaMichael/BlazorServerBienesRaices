@@ -1,8 +1,10 @@
 ﻿@page "/crear-propiedad"
+@using BlazorServerBienesRaices.Servicios;
 @using Models.DTO;
 @using Repositorio.IRepositorio
 @inject IPropiedadRepositorio iPropRepos
 @inject ICategoriaRepositorio iCategReposi
+@inject ISubidaArchivo iUpFile
 @inject IJSRuntime JSRunTimeBla
 @inject NavigationManager navMan
 
@@ -144,6 +146,38 @@
                 </div>
             </div>
             <br />
+
+            <div class="form-group" style="padding-top:30px; padding-bottom:30px;">
+                <hr />
+                <h4>Imagenes propiedad</h4>
+                <InputFile OnChange="ManejadorOnSubidaArchivo" multiple></InputFile>
+                
+                <div class="row">
+                    @if (estaIniciadoProcesoSubidaImagen)
+                    {
+                        <div class="col-md-12">
+                            <span><i class="oi oi-reload"></i>
+                                Espere mientras se sube la imagen...
+                            </span>
+                        </div>
+                    }
+
+                    @if (propiedadDTO.UrlImagenes != null && propiedadDTO.UrlImagenes.Count > 0)
+                    {
+                        int serial = 1;
+                        foreach (var imagenPropiedad in propiedadDTO.UrlImagenes)
+                        {
+                            <div class="col-md-2 mt-3">
+                                <div class="imagen-propiedad" style="background: url('@imagenPropiedad') 50% 50%">
+                                    <span class="titulo-imagen-propiedad">@serial</span>
+                                </div>
+                            </div>
+                            serial++;
+                        }
+                    }
+
+                </div>
+            </div>
             <div class="form-group">
                 <div class="row">
                     <div class="col-2">
@@ -170,8 +204,8 @@
 
 @code {
     private PropiedadDTO propiedadDTO { get; set; } = new PropiedadDTO();
-
     private DropDownCategoriaDTO categoriasSeleccionada = new DropDownCategoriaDTO();
+    private bool estaIniciadoProcesoSubidaImagen { get; set; } = false;
 
     //Obtener la lista de categorias en un dropdown o lista<select>
     private IEnumerable<DropDownCategoriaDTO> dropDownCategoriaDTO { get; set; } = new List<DropDownCategoriaDTO>();
@@ -179,8 +213,6 @@
     {
         dropDownCategoriaDTO = await iCategReposi.GetDropDownCategorias();
     }
-
-
 
     private async Task ManejadorCrearPropiedad()
     {
@@ -196,8 +228,63 @@
         await JSRunTimeBla.ToastrSuccess("Propiedad creada");
         //Navega a la url categorias
         navMan.NavigateTo("categorias");
+    }
 
+    private async Task ManejadorOnSubidaArchivo(InputFileChangeEventArgs e)
+    {
+        estaIniciadoProcesoSubidaImagen = true;
+        try
+        {
+            var imagenes = new List<string>();
+            //Si sube multiples atchivos
+            if (e.GetMultipleFiles().Count()>0)
+            {
+                //File es el archivo de archivos de GetMultipleFiles
+                foreach (var file in e.GetMultipleFiles())
+                {
 
+                    System.IO.FileInfo fileInfo = new System.IO.FileInfo(file.Name);
+                    var jpg = fileInfo.Extension.ToLower() == ".jpg";
+                    var png = fileInfo.Extension.ToLower() == ".png";
+                    var jpeg = fileInfo.Extension.ToLower() == ".jpeg";
+                    if (jpg || png || jpeg)
+                    {
+                        var uploadedImagePatch = await iUpFile.SubirArchivo(file);
+                        imagenes.Add(uploadedImagePatch);
+                    }
+                    else
+                    {                  
+                        await JSRunTimeBla.ToastrError("Porfavor seleccion únicamente .jpg/.png/.jpeg");
+                        return;
+                    }
+                }
+                //Verifica si existe algun elemento en la coleccion
+                if (imagenes.Any())
+                {       //Si contiene alguna imagen la url donde guardan las imagenes.
+                        //Guarda las imagenes sin borrar archivos
+                    if (propiedadDTO.UrlImagenes != null && propiedadDTO.UrlImagenes.Any())
+                    {
+                        propiedadDTO.UrlImagenes.AddRange(imagenes);
+                    }
+                    else
+                    {   //Se crea una nueva instancia y las guarda
+                        propiedadDTO.UrlImagenes = new List<string>();
+                        propiedadDTO.UrlImagenes.AddRange(imagenes);
+                    }                  
+                }
+                else
+                {
+                    await JSRunTimeBla.ToastrError("Fallo al subir imagenes");
+                    return;
+                }
+            }
+        estaIniciadoProcesoSubidaImagen = false;
+        }    
+    catch (Exception)
+        {
+            
+            throw;
+        }
     }
 
 

@@ -34,5 +34,7 @@ namespace BlazorServerBienesRaices.Models.DTO
 
         ////Relacion con modelo/tabla categoria
         public int CategoriaIDCategoria { get; set; }
+        public virtual ICollection<ImagenPropiedad> ImagenPropiedad { get; set; }
+        public List<string> UrlImagenes { get; set; }
     }
 }
