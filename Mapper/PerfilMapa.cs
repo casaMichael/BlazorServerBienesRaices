@@ -13,7 +13,8 @@ namespace BlazorServerBienesRaices.Mapper
             CreateMap<Propiedad, PropiedadDTO>().ReverseMap();
             //Categoria mapea el dropdown
             CreateMap<Categoria, DropDownCategoriaDTO>().ReverseMap();
-
+            //Propiedad mapea imagenes
+            CreateMap<ImagenPropiedad, ImagenPropiedadDTO>().ReverseMap();
         }
     }
 }

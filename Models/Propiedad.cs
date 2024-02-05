@@ -31,5 +31,6 @@ namespace BlazorServerBienesRaices.Models
         [ForeignKey("CategoriaIDCategoria")]
         public virtual Categoria Categoria { get; set; }
 
+        public virtual ICollection<ImagenPropiedad> ImagenPropiedad { get; set; }
     }
 }
