@@ -12,6 +12,8 @@ namespace BlazorServerBienesRaices.Data
         }
         //Agregar modelos
         public DbSet<Categoria> Categoria { get; set; }
+        public DbSet<Propiedad> Propiedad { get; set; }
+
 
 
 

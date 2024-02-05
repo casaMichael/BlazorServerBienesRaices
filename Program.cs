@@ -27,6 +27,8 @@ builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuth
 
 //Agregar Servicios para utilizar en los componentes BLAZOR
 builder.Services.AddScoped<ICategoriaRepositorio, CategoriaRepositorio>();
+builder.Services.AddScoped<IPropiedadRepositorio, PropiedadRepositorio>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

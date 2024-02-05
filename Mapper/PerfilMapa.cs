@@ -10,6 +10,9 @@ namespace BlazorServerBienesRaices.Mapper
         {   //Se vinculan 
             CreateMap<CategoriaDTO, Categoria>();
             CreateMap<Categoria,CategoriaDTO > ();
+            CreateMap<Propiedad, PropiedadDTO>().ReverseMap();
+            //Categoria mapea el dropdown
+            CreateMap<Categoria, DropDownCategoriaDTO>().ReverseMap();
 
         }
     }

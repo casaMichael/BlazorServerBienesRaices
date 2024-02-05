@@ -81,6 +81,20 @@ namespace BlazorServerBienesRaices.Repositorio
             }
         }
 
+        public async Task<IEnumerable<DropDownCategoriaDTO>> GetDropDownCategorias()
+        {   //Select de categorias
+            try
+            {
+                IEnumerable<DropDownCategoriaDTO> dropDownCategoriasDTO =
+                    _mapper.Map<IEnumerable<Categoria>, IEnumerable<DropDownCategoriaDTO>>(_bd.Categoria);
+                return (dropDownCategoriasDTO);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task<IEnumerable<CategoriaDTO>> GetTodasCategorias()
         {
             try

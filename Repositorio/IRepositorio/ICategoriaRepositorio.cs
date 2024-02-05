@@ -11,8 +11,7 @@ namespace BlazorServerBienesRaices.Repositorio.IRepositorio
         public Task<CategoriaDTO> NombreCategoriaExiste(string nombre);
         public Task<int> BorrarCategoria(int categoriaId);
         //Lista desplegable que trae todas las categorias
-        //public Task<IEnumerable<CategoriaDTO>> GetDropDownCategorias();
-
+        public Task<IEnumerable<DropDownCategoriaDTO>> GetDropDownCategorias();
 
     }
 }

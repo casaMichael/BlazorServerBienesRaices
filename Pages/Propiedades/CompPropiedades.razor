@@ -1,0 +1,104 @@
+﻿@page "/propiedades"
+@using Models.DTO;
+@using Repositorio.IRepositorio
+@inject IPropiedadRepositorio iPropRepos
+
+<h1 class="text-center">Propiedades</h1>
+
+<div class="car">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-7">
+                <h4 class="card-title text-dark">
+                    Lista de propiedades
+                </h4>
+            </div>
+            @*Va dos columnas desde la izquierda*@
+            <div class="offset-2">
+                <NavLink href="crear-propiedad" class="btn btn-primary">
+                    <i class="oi oi-browser"></i>
+                    Nueva propiedad
+                </NavLink>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>IdPropiedad</th>
+                    <th>NombreP</th>
+                    <th>DescripcionP</th>
+                    <th>Area</th>
+                    <th>Habitaciones</th>
+                    <th>Baños</th>
+                    <th>Parking</th>
+                    <th>Precio</th>
+                    <th>Activo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (propiedadDTO.Count() > 0)
+                {
+                    foreach (var propiedad in propiedadDTO)
+                    {
+                        <tr>
+                            <td>@propiedad.IdPropiedad</td>
+                            <td>@propiedad.NombreP</td>
+                            <td>@propiedad.DescripcionP</td>
+                            <td>@propiedad.Area</td>
+                            <td>@propiedad.Habitaciones</td>
+                            <td>@propiedad.Banios</td>
+                            <td>@propiedad.Parking</td>
+                            <td>@propiedad.Precio</td>
+                            <td>@propiedad.Activo</td>
+                            <td>
+                                <NavLink href="@($"editar-propiedad/{propiedad.IdPropiedad}")" class="btn btn-success">
+                                    <i class="oi oi-cog"></i>Editar
+                                </NavLink>
+                                <button class="btn btn-danger" @onclick="()=>ManejadorBorrar(propiedad.IdPropiedad)">
+                                    <i class="oi oi-cog"></i>Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">No hay registros</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+
+@code {
+    private IEnumerable<PropiedadDTO> propiedadDTO { get; set; } = new List<PropiedadDTO>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        propiedadDTO = await iPropRepos.GetTodasPropiedad();
+    }
+
+
+    private async Task ManejadorBorrar(int propiedadID)
+    {
+
+    }
+
+
+
+
+
+
+
+}

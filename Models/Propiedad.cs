@@ -9,6 +9,7 @@ namespace BlazorServerBienesRaices.Models
         public int IdPropiedad {get; set;}
         [Required]
         public string NombreP { get; set; }
+        [Required]
         public string DescripcionP { get; set; }
         [Required]
         public int Area { get; set; }
@@ -26,8 +27,8 @@ namespace BlazorServerBienesRaices.Models
         public DateTime FechaActualizacion { get; set; }
 
         //Relacion con modelo/tabla categoria
-        public int CategoriaID { get; set; }
-        [ForeignKey("CategoriaID")]
+        public int CategoriaIDCategoria { get; set; }
+        [ForeignKey("CategoriaIDCategoria")]
         public virtual Categoria Categoria { get; set; }
 
     }
